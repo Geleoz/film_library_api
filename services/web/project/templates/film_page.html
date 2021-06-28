@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ film.title }}
+{% endblock %}
+
+{% block content %}
+    <div class="container mb-5 ml-5 mt-5">
+        <img src="{{ film.poster }}" alt="Poster" width="400" height="600">
+        <p>
+            <h4>{{ film.title }}</h4>
+        </p>
+        <p>
+            <b>Release date</b>
+            {{ film.release_date.strftime('%B %d, %Y') }}
+        </p>
+        <p>
+            <b>Rating</b>
+            {{ film.rating }}
+        </p>
+        <p>
+            <b>Directors</b>
+            {% for director in film.directors %}
+                {{ director }}
+            {% endfor %}
+        </p>
+        <p>
+            <b>Genres</b>
+            {% for genre in film.genres %}
+                {{ genre.name }}
+            {% endfor %}
+        </p>
+        <p>
+            <b>Description</b>
+            <br>
+            {{ film.description }}
+        </p>
+    </div>
+{% endblock %}
