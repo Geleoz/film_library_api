@@ -2,3 +2,24 @@
 {% block title %}
     Home
 {% endblock %}
+
+{% block content %}
+    <table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.user_id }}</td>
+                <td>{{ user.nickname }}</td>
+                <td>{{ user.email }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
