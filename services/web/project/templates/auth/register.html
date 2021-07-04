@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container border border-secondary pb-4 mt-5" style="width: 700px">
         <form method="POST" class="form-register" style="color:white">
             {{ form.hidden_tag() }}
             <br>
@@ -13,13 +13,13 @@
             <br>
             {{ form.username.label() }}
             {{ form.username(class="form-control") }}
-
+            <br>
             {{ form.email.label() }}
             {{ form.email(class="form-control") }}
-
+            <br>
             {{ form.password1.label() }}
             {{ form.password1(class="form-control") }}
-
+            <br>
             {{ form.password2.label() }}
             {{ form.password2(class="form-control") }}
 
