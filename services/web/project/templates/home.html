@@ -8,18 +8,36 @@
     <thead>
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Status</th>
+            <th scope="col">Title</th>
+            <th scope="col">Release date</th>
+            <th scope="col">Description</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Poster</th>
+            <th scope="col">User</th>
+            <th scope="col">Directors</th>
+            <th scope="col">Genres</th>
         </tr>
     </thead>
     <tbody>
-        {% for user in users %}
+        {% for film in films %}
             <tr>
-                <td>{{ user.user_id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.status.name }}</td>
+                <td>{{ film.film_id }}</td>
+                <td>{{ film.title }}</td>
+                <td>{{ film.release_date }}</td>
+                <td>{{ film.description }}</td>
+                <td>{{ film.rating }}</td>
+                <td>{{ film.poster }}</td>
+                <td>{{ film.user.username }}</td>
+                <td>
+                    {% for director in film.directors %}
+                        {{ director }}
+                    {% endfor %}
+                </td>
+                <td>
+                    {% for genre in film.genres %}
+                        {{ genre }}
+                    {% endfor %}
+                </td>
             </tr>
         {% endfor %}
     </tbody>
