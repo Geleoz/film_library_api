@@ -16,16 +16,36 @@ def create_db():
 @cli.command("seed_db")
 def seed_db():
     db.session.add(User(username="user_name", email="user_email@gmail.com", password="pass"))
-    director = Director(first_name="first_name", last_name="last_name", birth_date="2021-07-04")
-    genre1 = Genre(name="genre1")
-    genre2 = Genre(name="genre2")
-    db.session.add(Film(title="film", release_date="2021-07-04", description="desc", rating=8, poster="poster", user_id="1"))
-    director.films.append(Film.query.filter_by(film_id=1).first())
-    genre1.films.append(Film.query.filter_by(film_id=1).first())
-    genre2.films.append(Film.query.filter_by(film_id=1).first())
+    director = Director(first_name="Christopher", last_name="Nolan", birth_date="1970-07-30")
+    action = Genre(name="Action")
+    adventure = Genre(name="Adventure")
+    sci_fi = Genre(name="Sci-Fi")
+    inception = Film(title="Inception", release_date="2010-07-22", description="""
+    Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, 
+    stealing valuable secrets from deep within the subconscious during the dream state, 
+    when the mind is at its most vulnerable. Cobb's rare ability has made him a coveted 
+    player in this treacherous new world of corporate espionage, but it has also made him 
+    an international fugitive and cost him everything he has ever loved. Now Cobb is being
+    offered a chance at redemption. One last job could give him his life back but only if 
+    he can accomplish the impossible, inception. Instead of the perfect heist, Cobb and his
+    team of specialists have to pull off the reverse: their task is not to steal an idea, but
+    to plant one. If they succeed, it could be the perfect crime. But no amount of careful planning
+    or expertise can prepare the team for the dangerous enemy that seems to predict their every move. 
+    An enemy that only Cobb could have seen coming.
+    """, rating=8.8, poster="https://images-na.ssl-images-amazon.com/images/I/912AErFSBHL._SL1500_.jpg", user_id=1)
+    inception.directors.append(director)
+    inception.genres.append(action)
+    inception.genres.append(adventure)
+    inception.genres.append(sci_fi)
+    #director.films.append(Film.query.filter_by(film_id=1).first())
+    #action.films.append(Film.query.filter_by(film_id=1).first())
+    #adventure.films.append(Film.query.filter_by(film_id=1).first())
+    #sci_fi.films.append(Film.query.filter_by(film_id=1).first())
     db.session.add(director)
-    db.session.add(genre1)
-    db.session.add(genre2)
+    db.session.add(action)
+    db.session.add(adventure)
+    db.session.add(sci_fi)
+    db.session.add(inception)
     db.session.commit()
 
 

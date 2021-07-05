@@ -40,7 +40,7 @@ class Director(db.Model):
     films = relationship("Film", secondary=film_director, backref="Director")
 
     def __repr__(self):
-        return self.first_name
+        return self.first_name + " " + self.last_name
 
 
 film_genre = db.Table("film_genre",
@@ -66,7 +66,7 @@ class Film(db.Model):
     title = db.Column(db.String(64), nullable=False)
     release_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Numeric, nullable=False)
     poster = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     user = relationship("User", back_populates="added_films")
