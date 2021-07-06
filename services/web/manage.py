@@ -17,9 +17,13 @@ def create_db():
 def seed_db():
     db.session.add(User(username="user_name", email="user_email@gmail.com", password="pass"))
     director = Director(first_name="Christopher", last_name="Nolan", birth_date="1970-07-30")
+    db.session.add(director)
     action = Genre(name="Action")
     adventure = Genre(name="Adventure")
     sci_fi = Genre(name="Sci-Fi")
+    db.session.add(action)
+    db.session.add(adventure)
+    db.session.add(sci_fi)
     inception = Film(title="Inception", release_date="2010-07-22", description="""
     Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, 
     stealing valuable secrets from deep within the subconscious during the dream state, 
@@ -41,10 +45,6 @@ def seed_db():
     #action.films.append(Film.query.filter_by(film_id=1).first())
     #adventure.films.append(Film.query.filter_by(film_id=1).first())
     #sci_fi.films.append(Film.query.filter_by(film_id=1).first())
-    db.session.add(director)
-    db.session.add(action)
-    db.session.add(adventure)
-    db.session.add(sci_fi)
     db.session.add(inception)
     db.session.commit()
 

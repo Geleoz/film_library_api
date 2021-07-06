@@ -25,35 +25,36 @@ class User(db.Model):
     # status = relationship("Status", back_populates="users")
 
 
-film_director = db.Table("film_director",
-                         db.Column("film_id", db.Integer, db.ForeignKey("film.film_id"), primary_key=True),
-                         db.Column("director_id", db.Integer, db.ForeignKey("director.director_id"), primary_key=True))
+film_director = db.Table("film_director", db.Model.metadata,
+                         db.Column("film_id", db.Integer, db.ForeignKey("film.id")),
+                         db.Column("director_id", db.Integer, db.ForeignKey("director.id")))
 
 
 class Director(db.Model):
     __tablename__ = "director"
 
-    director_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(32), nullable=False)
     last_name = db.Column(db.String(32), nullable=False)
     birth_date = db.Column(db.Date)
-    films = relationship("Film", secondary=film_director, backref="Director")
+    films = relationship("Film", secondary=film_director, back_populates="directors")
 
     def __repr__(self):
         return self.first_name + " " + self.last_name
 
 
-film_genre = db.Table("film_genre",
-                      db.Column("film_id", db.Integer, db.ForeignKey("film.film_id"), primary_key=True),
-                      db.Column("genre_id", db.Integer, db.ForeignKey("genre.genre_id"), primary_key=True))
+film_genre = db.Table("film_genre", db.Model.metadata,
+                      db.Column('id', db.Integer, primary_key=True),
+                      db.Column("film_id", db.Integer, db.ForeignKey("film.id")),
+                      db.Column("genre_id", db.Integer, db.ForeignKey("genre.id")))
 
 
 class Genre(db.Model):
     __tablename__ = "genre"
 
-    genre_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False)
-    films = relationship("Film", secondary=film_genre, backref="Genre")
+    films = relationship("Film", secondary=film_genre, back_populates="genres")
 
     def __repr__(self):
         return self.name
@@ -62,7 +63,7 @@ class Genre(db.Model):
 class Film(db.Model):
     __tablename__ = "film"
 
-    film_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), nullable=False)
     release_date = db.Column(db.Date, nullable=False)
     description = db.Column(db.Text)
@@ -70,5 +71,5 @@ class Film(db.Model):
     poster = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     user = relationship("User", back_populates="added_films")
-    directors = relationship("Director", secondary=film_director, backref="Film")
-    genres = relationship("Genre", secondary=film_genre, backref="Film")
+    directors = relationship("Director", secondary=film_director, back_populates="films")
+    genres = relationship("Genre", secondary=film_genre, back_populates="films")

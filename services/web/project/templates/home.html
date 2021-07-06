@@ -16,11 +16,11 @@
     <tbody>
         {% for film in films %}
             <tr>
-                <td><a href="{{ url_for('film_page', film_id=film.film_id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
+                <td><a href="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
                 <td>{{ film.release_date }}</td>
                 <td>{{ film.rating }}</td>
                 <td>
-                    <form action="{{ url_for('film_page', film_id=film.film_id, film_title=film.title) }}">
+                    <form action="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}">
                         <button class="btn btn-outline btn-info">View Info</button>
                     </form>
                 </td>
