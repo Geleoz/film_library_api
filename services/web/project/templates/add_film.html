@@ -28,8 +28,15 @@
             {{ form.director.label() }}
             {{ form.director(class="form-control") }}
             <br>
-            {{ form.genre.label() }}
-            {{ form.genre }}
+                {{ form.genre.label() }}
+                {% for genre in form.genre %}
+                    <div class="form-check">
+                        {{ genre(class="form-check-input") }}
+                        {{ genre.label(class="form-check-label") }}
+                    </div>
+                {% endfor %}
+<!--            {{ form.genre.label() }}-->
+<!--            {{ form.genre }}-->
             <br>
             {{ form.submit(class="btn, btn-lg btn-block btn-primary") }}
         </form>

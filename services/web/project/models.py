@@ -25,7 +25,7 @@ class User(db.Model):
     # status = relationship("Status", back_populates="users")
 
 
-film_director = db.Table("film_director", db.Model.metadata,
+film_director = db.Table("film_director",
                          db.Column("film_id", db.Integer, db.ForeignKey("film.id")),
                          db.Column("director_id", db.Integer, db.ForeignKey("director.id")))
 
@@ -55,9 +55,6 @@ class Genre(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False)
     films = relationship("Film", secondary=film_genre, back_populates="genres")
-
-    def __repr__(self):
-        return self.name
 
 
 class Film(db.Model):
