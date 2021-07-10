@@ -1,13 +1,22 @@
 from project import app, db
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, session
 from project.models import Film, Genre, Director
 from project.add_film_form import AddFilm
 
 
-@app.route("/")
-@app.route("/home")
+@app.route("/", methods=["GET", "POST"])
+@app.route("/home", methods=["GET", "POST"])
 def home_page():
-    page = request.args.get("page", 1, type=int)
+    page = request.args.get('page', 1, type=int)
+    if request.method == "POST":
+        query = request.form["query"]
+        query = f"%{query}%"
+        session["query"] = query
+        films = Film.query.filter(Film.title.ilike(query) |
+                                  db.cast(Film.release_date, db.String(10)).ilike(query) |
+                                  db.cast(Film.rating, db.String(10)).ilike(query)).paginate(page=page,
+                                                                                             per_page=10)
+        return render_template("search.html", films=films, query=query)
     films = Film.query.paginate(page=page, per_page=10)
     return render_template("home.html", films=films)
 
@@ -41,3 +50,20 @@ def add_film_page():
                 flash(i, category="danger")
             flash(f"Error: {err}.", category="danger")
     return render_template("add_film.html", form=form)
+
+
+@app.route("/search", methods=["GET", "POST"])
+def search_page():
+    page = request.args.get('page', 1, type=int)
+    query = session["query"]
+    if request.method == "POST":
+        query = request.form["query"]
+        query = f"%{query}%"
+        session["query"] = query
+    films = Film.query.filter(Film.title.ilike(query) |
+                              db.cast(Film.release_date, db.String(10)).ilike(query) |
+                              db.cast(Film.rating, db.String(10)).ilike(query)).paginate(page=page,
+                                                                                         per_page=10)
+
+    return render_template("search.html", films=films, query=query)
+

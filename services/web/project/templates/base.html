@@ -27,10 +27,14 @@
             <li class="nav-item active">
               <a class="nav-link" href="{{ url_for('add_film_page') }}">Add film<span class="sr-only">(current)</span></a>
             </li>
-            <form class="form-inline my-2 my-lg-0 ml-3">
-              <input class="form-control mr-sm-2" type="search" placeholder="Search film" aria-label="Search film" size="30">
+
+
+            <form class="form-inline my-2 my-lg-0 ml-3" method="POST">
+              <input class="form-control mr-sm-2" type="search" name="query" id="query" placeholder="Search film" aria-label="Search film" size="30">
               <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
             </form>
+
+
           </ul>
           <ul class="navbar-nav">
             <li class="nav-item">

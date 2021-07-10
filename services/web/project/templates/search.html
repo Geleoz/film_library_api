@@ -5,15 +5,15 @@
 
 {% block content %}
     <table class="table table-hover table-dark">
-    <thead>
-        <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Release date</th>
-            <th scope="col">Rating</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Release date</th>
+                <th scope="col">Rating</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
         {% for film in films.items %}
             <tr>
                 <td><a href="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
@@ -26,13 +26,13 @@
                 </td>
             </tr>
         {% endfor %}
-    </tbody>
-</table>
+        </tbody>
+    </table>
 <!--Pagination-->
 <!--<nav aria-label="Page navigation example">-->
 <!--                <ul class="pagination">-->
 <!--                    {% if films.has_prev %}-->
-<!--                      <li class="page-item"> <a class="page-link" href="{{ url_for('home_page', page=films.prev_num) }}">Previous</a></li>-->
+<!--                      <li class="page-item"> <a class="page-link" href="{{ url_for('search_page', page=films.prev_num) }}">Previous</a></li>-->
 <!--                    {% else %}-->
 <!--                      <li class="page-item"><a class="page-link btn disabled" href="#">Previous</a></li>-->
 <!--                    {% endif %}-->
@@ -41,9 +41,9 @@
 <!--     {% if page %}-->
 
 <!--      {% if page==films.page %}-->
-<!--       <li class="page-item active"><a class="page-link" href="{{ url_for('home_page', page=page) }}">{{ page }}</a></li>-->
+<!--       <li class="page-item active"><a class="page-link" href="{{ url_for('search_page', page=page) }}">{{ page }}</a></li>-->
 <!--      {% else %}-->
-<!--       <li class="page-item"><a class="page-link" href="{{ url_for('home_page', page=page) }}">{{ page }}</a></li>-->
+<!--       <li class="page-item"><a class="page-link" href="{{ url_for('search_page', page=page) }}">{{ page }}</a></li>-->
 <!--      {% endif %}-->
 
 <!--     {% else %}-->
@@ -52,7 +52,7 @@
 <!--     {% endfor %}-->
 
 <!--                    {% if films.has_next %}-->
-<!--                      <li class="page-item"> <a class="page-link" href="{{ url_for('home_page', page=films.next_num) }}">Next</a></li>-->
+<!--                      <li class="page-item"> <a class="page-link" href="{{ url_for('search_page', page=films.next_num) }}">Next</a></li>-->
 <!--                    {% else %}-->
 <!--                      <li class="page-item"><a class="page-link btn disabled" href="#">Next</a></li>-->
 <!--                    {% endif %}-->
@@ -60,19 +60,19 @@
 <!--                </ul>-->
 <!--    </nav>-->
 <div class="container text-right mr-5" style="position: fixed; bottom: 100px; right: 10px">
-    <a href="{{ url_for('home_page', page=films.prev_num) }}"
+    <a href="{{ url_for('search_page', page=films.prev_num) }}"
        class="btn btn-outline-light {% if films.page == 1 %}disabled{% endif %}">
         &laquo;
     </a>
     {% for page_num in films.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
             {% if films.page == page_num %}
-                <a href="{{ url_for('home_page', page=page_num) }}"
+                <a href="{{ url_for('search_page', page=page_num) }}"
                    class="btn btn-light">
                     {{ page_num }}
                 </a>
             {% else %}
-                <a href="{{ url_for('home_page', page=page_num) }}"
+                <a href="{{ url_for('search_page', page=page_num) }}"
                    class="btn btn-outline-light">
                     {{ page_num }}
                 </a>
@@ -81,7 +81,7 @@
             ...
         {% endif %}
     {% endfor %}
-    <a href="{{ url_for('home_page', page=films.next_num) }}"
+    <a href="{{ url_for('search_page', page=films.next_num) }}"
        class="btn btn-outline-light {% if films.page == films.pages %}disabled{% endif %}">
         &raquo;
     </a>
