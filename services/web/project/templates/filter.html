@@ -4,11 +4,41 @@
 {% endblock %}
 
 {% block content %}
-    <table class="table table-hover table-dark">
-        <thead>
-            <tr>
-                <th scope="col">Title</th>
-                <th scope="col">
+    <div class="row">
+        <div class="col-2">
+            <div class="container ml-1">
+                <form method="POST" action="{{ url_for('filter_page') }}" style="color:white">
+                    {{ form.hidden_tag() }}
+                        <br>
+                        <h1>Filter</h1>
+                        <br>
+                        {{ form.release_date_from.label() }}
+                        {{ form.release_date_from(class="form-control") }}
+                        <br>
+                        {{ form.release_date_to.label() }}
+                        {{ form.release_date_to(class="form-control") }}
+                        <br>
+                        {{ form.director.label() }}
+                        {{ form.director(class="form-control") }}
+                        <br>
+                        {{ form.genre.label() }}
+                        {% for genre in form.genre %}
+                            <div class="form-check">
+                                {{ genre(class="form-check-input") }}
+                                {{ genre.label(class="form-check-label") }}
+                            </div>
+                    {% endfor %}
+                    <br>
+                    {{ form.submit(class="btn, btn-lg btn-block btn-primary") }}
+                </form>
+            </div>
+        </div>
+        <div class="col-10">
+            <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">
                         <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page') }}" method="POST">
                             Release date
                             <div class="dropdown">
@@ -36,39 +66,41 @@
                             </div>
                         </form>
                     </th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for film in films.items %}
-            <tr>
-                <td><a href="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
-                <td>{{ film.release_date }}</td>
-                <td>{{ film.rating }}</td>
-                <td>
-                    <form action="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}">
-                        <button class="btn btn-outline btn-info">View Info</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for film in films.items %}
+                <tr>
+                    <td><a href="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
+                    <td>{{ film.release_date }}</td>
+                    <td>{{ film.rating }}</td>
+                    <td>
+                        <form action="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}">
+                            <button class="btn btn-outline btn-info">View Info</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
 <!--Pagination-->
 <div class="container text-right mr-5" style="position: fixed; bottom: 100px; right: 10px">
-    <a href="{{ url_for('search_page', page=films.prev_num) }}"
+    <a href="{{ url_for('filter_page', page=films.prev_num) }}"
        class="btn btn-outline-light {% if films.page == 1 %}disabled{% endif %}">
         &laquo;
     </a>
     {% for page_num in films.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
             {% if films.page == page_num %}
-                <a href="{{ url_for('search_page', page=page_num) }}"
+                <a href="{{ url_for('filter_page', page=page_num) }}"
                    class="btn btn-light">
                     {{ page_num }}
                 </a>
             {% else %}
-                <a href="{{ url_for('search_page', page=page_num) }}"
+                <a href="{{ url_for('filter_page', page=page_num) }}"
                    class="btn btn-outline-light">
                     {{ page_num }}
                 </a>
@@ -77,7 +109,7 @@
             ...
         {% endif %}
     {% endfor %}
-    <a href="{{ url_for('search_page', page=films.next_num) }}"
+    <a href="{{ url_for('filter_page', page=films.next_num) }}"
        class="btn btn-outline-light {% if films.page == films.pages %}disabled{% endif %}">
         &raquo;
     </a>

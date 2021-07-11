@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import widgets, StringField, TextAreaField, DecimalField, SelectMultipleField, SubmitField, HiddenField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Length, EqualTo, Email, InputRequired, NumberRange
+from wtforms.validators import Length, InputRequired, NumberRange
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from project.models import Director, Genre
+from project.models import Director, Genre, Film
 
 
 def choose_directors():
@@ -30,3 +30,11 @@ class AddFilm(FlaskForm):
     director_id = HiddenField()
     genre = MultiCheckboxField(label="Genres", validators=[InputRequired(message="Genres not specified.")])
     submit = SubmitField(label="Add film")
+
+
+class FilterBy(FlaskForm):
+    release_date_from = DateField(label="Date From")
+    release_date_to = DateField(label="Date To")
+    director = QuerySelectField(label="Director", query_factory=choose_directors, allow_blank=True)
+    genre = MultiCheckboxField(label="Genre")
+    submit = SubmitField(label="Apply")
