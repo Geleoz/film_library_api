@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    Home
+    Filter
 {% endblock %}
 
 {% block content %}
@@ -34,12 +34,12 @@
             </div>
         </div>
         <div class="col-10">
-            <table class="table table-hover table-dark">
+            <table class="table table-hover table-dark table-striped table-bordered">
             <thead>
                 <tr>
                     <th scope="col">Title</th>
                     <th scope="col">
-                        <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page') }}" method="POST">
+                        <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page', filter=filter) }}" method="POST">
                             Release date
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-sm dropdown-toggle ml-2" type="button" id="sort_by_release_date" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -53,7 +53,7 @@
                         </form>
                     </th>
                     <th scope="col">
-                        <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page') }}" method="POST">
+                        <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page', filter=filter) }}" method="POST">
                             Rating
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-sm dropdown-toggle ml-2" type="button" id="sort_by_rating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -88,19 +88,19 @@
     </div>
 <!--Pagination-->
 <div class="container text-right mr-5" style="position: fixed; bottom: 100px; right: 10px">
-    <a href="{{ url_for('filter_page', page=films.prev_num) }}"
+    <a href="{%if sort%}{{ url_for('filter_page', page=films.prev_num, filter=filter, sort=sort) }}{%else%}{{url_for('filter_page', page=films.prev_num, filter=filter)}}{%endif%}"
        class="btn btn-outline-light {% if films.page == 1 %}disabled{% endif %}">
         &laquo;
     </a>
     {% for page_num in films.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if page_num %}
             {% if films.page == page_num %}
-                <a href="{{ url_for('filter_page', page=page_num) }}"
+                <a href="{%if sort%}{{ url_for('filter_page', page=page_num, filter=filter, sort=sort) }}{%else%}{{url_for('filter_page', page=page_num, filter=filter)}}{%endif%}"
                    class="btn btn-light">
                     {{ page_num }}
                 </a>
             {% else %}
-                <a href="{{ url_for('filter_page', page=page_num) }}"
+                <a href="{%if sort%}{{ url_for('filter_page', page=page_num, filter=filter, sort=sort) }}{%else%}{{url_for('filter_page', page=page_num, filter=filter)}}{%endif%}"
                    class="btn btn-outline-light">
                     {{ page_num }}
                 </a>
@@ -109,7 +109,7 @@
             ...
         {% endif %}
     {% endfor %}
-    <a href="{{ url_for('filter_page', page=films.next_num) }}"
+    <a href="{%if sort%}{{ url_for('filter_page', page=films.next_num, filter=filter, sort=sort) }}{%else%}{{url_for('filter_page', page=films.next_num, filter=filter)}}{%endif%}"
        class="btn btn-outline-light {% if films.page == films.pages %}disabled{% endif %}">
         &raquo;
     </a>
