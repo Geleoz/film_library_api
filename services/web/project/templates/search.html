@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}
+    Search
+{% endblock %}
+
+{% block content %}
+    <table class="table table-hover table-dark table-striped table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">
+                        <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page', key=key) }}" method="POST">
+                            Release date
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle ml-2" type="button" id="sort_by_release_date" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Sort
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="sort_by_release_date">
+                                    <button class="dropdown-item" name="sort_by_release_date_asc" type="submit">Asc</button>
+                                    <button class="dropdown-item" name="sort_by_release_date_desc" type="submit">Desc</button>
+                                </div>
+                            </div>
+                        </form>
+                    </th>
+                    <th scope="col">
+                        <form class="form-inline my-2 my-lg-0 ml-3" action="{{ url_for('sort_page', key=key) }}" method="POST">
+                            Rating
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle ml-2" type="button" id="sort_by_rating" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Sort
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="sort_by_rating">
+                                    <button class="dropdown-item" name="sort_by_rating_asc" type="submit">Asc</button>
+                                    <button class="dropdown-item" name="sort_by_rating_desc" type="submit">Desc</button>
+                                </div>
+                            </div>
+                        </form>
+                    </th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for film in films.items %}
+            <tr>
+                <td><a href="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
+                <td>{{ film.release_date }}</td>
+                <td>{{ film.rating }}</td>
+                <td>
+                    <form action="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}">
+                        <button class="btn btn-outline btn-info">View Info</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<!--Pagination-->
+<div class="container text-right mr-5" style="position: fixed; bottom: 100px; right: 10px">
+    <a href="{%if sort%}{{ url_for('search_page', page=films.prev_num, key=key, sort=sort) }}{%else%}{{url_for('search_page', page=films.prev_num, key=key)}}{%endif%}"
+       class="btn btn-outline-light {% if films.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+    {% for page_num in films.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if films.page == page_num %}
+                <a href="{%if sort%}{{ url_for('search_page', page=page_num, key=key, sort=sort) }}{%else%}{{url_for('search_page', page=page_num, key=key)}}{%endif%}"
+                   class="btn btn-light">
+                    {{ page_num }}
+                </a>
+            {% else %}
+                <a href="{%if sort%}{{ url_for('search_page', page=page_num, key=key, sort=sort) }}{%else%}{{url_for('search_page', page=page_num, key=key)}}{%endif%}"
+                   class="btn btn-outline-light">
+                    {{ page_num }}
+                </a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+    <a href="{%if sort%}{{ url_for('search_page', page=films.next_num, key=key, sort=sort) }}{%else%}{{url_for('search_page', page=films.next_num, key=key)}}{%endif%}"
+       class="btn btn-outline-light {% if films.page == films.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+    <p class="mt-3">
+        Showing page {{ films.page }} of {{ films.pages }}
+    </p>
+</div>
+{% endblock %}

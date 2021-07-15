@@ -55,7 +55,7 @@ def seed_db():
         current_film_id += 1
 
     db.session.commit()
-    
+
 
 if __name__ == "__main__":
     cli()

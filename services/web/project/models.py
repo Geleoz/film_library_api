@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(64), nullable=False)
     added_films = relationship("Film", back_populates="user")
 
-
+    
 film_director = db.Table("film_director",
                          db.Column("film_id", db.Integer, db.ForeignKey("film.id")),
                          db.Column("director_id", db.Integer, db.ForeignKey("director.id")))
