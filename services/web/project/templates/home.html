@@ -7,39 +7,57 @@
     <table class="table table-hover table-dark">
     <thead>
         <tr>
-            <th scope="col">ID</th>
+
             <th scope="col">Title</th>
             <th scope="col">Release date</th>
-            <th scope="col">Description</th>
             <th scope="col">Rating</th>
-            <th scope="col">Poster</th>
-            <th scope="col">User</th>
-            <th scope="col">Directors</th>
-            <th scope="col">Genres</th>
+            <th scope="col"></th>
         </tr>
     </thead>
     <tbody>
-        {% for film in films %}
+        {% for film in films.items %}
             <tr>
-                <td>{{ film.film_id }}</td>
-                <td>{{ film.title }}</td>
+                <td><a href="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}" style="color:white;">{{ film.title }}</a></td>
                 <td>{{ film.release_date }}</td>
-                <td>{{ film.description }}</td>
                 <td>{{ film.rating }}</td>
-                <td>{{ film.poster }}</td>
-                <td>{{ film.user.username }}</td>
                 <td>
-                    {% for director in film.directors %}
-                        {{ director }}
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for genre in film.genres %}
-                        {{ genre }}
-                    {% endfor %}
+                    <form action="{{ url_for('film_page', film_id=film.id, film_title=film.title) }}">
+                        <button class="btn btn-outline btn-info">View Info</button>
+                    </form>
                 </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+<!--Pagination-->
+<div class="text-right mr-5">
+    <a href="{{ url_for('home_page', page=films.prev_num) }}"
+       class="btn btn-outline-light {% if films.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+    {% for page_num in films.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if films.page == page_num %}
+                <a href="{{ url_for('home_page', page=page_num) }}"
+                   class="btn btn-light">
+                    {{ page_num }}
+                </a>
+            {% else %}
+                <a href="{{ url_for('home_page', page=page_num) }}"
+                   class="btn btn-outline-light">
+                    {{ page_num }}
+                </a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('home_page', page=films.next_num) }}"
+       class="btn btn-outline-light {% if films.page == films.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+</div>
+<p class="text-right mt-3 mr-5">
+   Showing page {{ films.page }} of {{ films.pages }}
+</p>
 {% endblock %}

@@ -1,6 +1,7 @@
 from flask.cli import FlaskGroup
 from project import app, db
 from project.models import User, Director, Genre, Film
+import pandas as pd
 
 
 cli = FlaskGroup(app)
@@ -15,19 +16,46 @@ def create_db():
 
 @cli.command("seed_db")
 def seed_db():
-    db.session.add(User(username="user_name", email="user_email@gmail.com", password="pass"))
-    director = Director(first_name="first_name", last_name="last_name", birth_date="2021-07-04")
-    genre1 = Genre(name="genre1")
-    genre2 = Genre(name="genre2")
-    db.session.add(Film(title="film", release_date="2021-07-04", description="desc", rating=8, poster="poster", user_id="1"))
-    director.films.append(Film.query.filter_by(film_id=1).first())
-    genre1.films.append(Film.query.filter_by(film_id=1).first())
-    genre2.films.append(Film.query.filter_by(film_id=1).first())
-    db.session.add(director)
-    db.session.add(genre1)
-    db.session.add(genre2)
-    db.session.commit()
+    directors = pd.read_csv("project/data/directors.csv", quotechar='"', skipinitialspace=True, header=None)
+    genres = pd.read_csv("project/data/genres.csv", quotechar='"', skipinitialspace=True, header=None)
+    films = pd.read_csv("project/data/films.csv", quotechar='"', skipinitialspace=True, header=None)
+    film_director = pd.read_csv("project/data/film_director.csv", quotechar='"', skipinitialspace=True, header=None)
+    film_genre = pd.read_csv("project/data/film_genre.csv", quotechar='"', skipinitialspace=True, header=None)
 
+    for i in directors.itertuples():
+        director = Director(**{
+            "first_name": i[1],
+            "last_name": i[2],
+            "birth_date": i[3]
+        })
+        db.session.add(director)
+
+    for i in genres.itertuples():
+        genre = Genre(**{
+            "name": i[1]
+        })
+        db.session.add(genre)
+
+    current_film_id = 1
+    for i in films.itertuples():
+        film = Film(**{
+            "title": i[1],
+            "release_date": i[2],
+            "description": i[3],
+            "rating": i[4],
+            "poster": i[5]
+        })
+        for j in film_director.itertuples():
+            if j[1] == current_film_id:
+                film.directors.append(Director.query.filter_by(id=j[2]).first())
+        for j in film_genre.itertuples():
+            if j[1] == current_film_id:
+                film.genres.append(Genre.query.filter_by(id=j[2]).first())
+        db.session.add(film)
+        current_film_id += 1
+
+    db.session.commit()
+    
 
 if __name__ == "__main__":
     cli()
