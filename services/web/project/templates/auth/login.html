@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Sign-In
+{% endblock %}
+
+{% block content %}
+    <div class="container border  border-secondary pb-4 mt-5" style="width: 700px">
+        <form method="POST" class="form-register" style="color:white">
+            {{ form.hidden_tag() }}
+            <br>
+            <h1>Sign-In</h1>
+            <br>
+            {{ form.username.label() }}
+            {{ form.username(class="form-control") }}
+            <br>
+            {{ form.password.label() }}
+            {{ form.password(class="form-control") }}
+
+            <br>
+            {{ form.submit(class="btn, btn-lg btn-block btn-primary") }}
+            <br>
+            <hr style="height:2px; border-width:0; color:gray; background-color:gray">
+            <br>
+            <a class="btn btn-lg btn-block btn-info" href="{{ url_for('register_page') }}">Create account</a>
+        </form>
+    </div>
+{% endblock %}
