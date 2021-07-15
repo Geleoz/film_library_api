@@ -1,6 +1,6 @@
 from project import app, db, admin
 from flask import render_template, request, flash, redirect, url_for, session
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user
 from project.models import Film, Genre, Director, User, Role
 from project.forms import AddFilm, FilterBy
 from project.auth import RegisterForm, LoginForm
@@ -148,7 +148,8 @@ def add_film_page():
                     release_date=request.form["release_date"],
                     description=request.form["description"],
                     rating=request.form["rating"],
-                    poster=request.form["poster"])
+                    poster=request.form["poster"],
+                    user_id=current_user.get_id())
         film.directors.append(Director.query.filter_by(id=request.form["director"]).first())
         for genre_id in form.genre.data:
             film.genres.append(Genre.query.filter_by(id=genre_id).first())
@@ -162,6 +163,14 @@ def add_film_page():
                 flash(i, category="danger")
             flash(f"Error: {err}.", category="danger")
     return render_template("add_film.html", form=form)
+
+
+@app.route("/delete_film", methods=["POST"])
+def delete_film_page():
+    Film.query.filter_by(id=request.args.get("film_id")).delete()
+    db.session.commit()
+    flash("Film has been deleted successfully.", category="success")
+    return redirect(url_for("home_page"))
 
 
 @app.route("/register", methods=["GET", "POST"])

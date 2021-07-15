@@ -4,10 +4,21 @@
 {% endblock %}
 
 {% block content %}
+    <style>
+        .modal-content {
+          background-color: #202A33;
+        }
+    </style>
+
     <div class="container mb-5 ml-5 mt-5">
         <img src="{{ film.poster }}" alt="Poster" width="400" height="600">
         <p>
-            <h4>{{ film.title }}</h4>
+            <h4>
+                {{ film.title }}
+                {% if current_user.is_authenticated and (film.user_id == current_user.get_id() or current_user.is_admin()) %}
+                    <button type="button" class="btn btn-danger ml-3" data-toggle="modal" data-target="#deleteFilmModal">Delete film</button>
+                {% endif %}
+            </h4>
         </p>
         <p>
             <b>Release date</b>
@@ -34,5 +45,28 @@
             <br>
             {{ film.description }}
         </p>
+    </div>
+
+    <!-- Delete Film Modal -->
+    <div class="modal fade" id="deleteFilmModal" tabindex="-1" role="dialog" aria-labelledby="deleteFilm" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteFilm">Delete film</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this film?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <form method="POST" action="{{ url_for('delete_film_page', film_id=film.id) }}">
+                  <button type="submit" class="btn btn-primary">Ok</button>
+              </form>
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock %}
