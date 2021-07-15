@@ -1,6 +1,6 @@
 from project import app, db
 from flask import render_template, redirect, url_for, flash
-from project.models import Status, User
+from project.models import Status, User, Film
 from project.auth import RegisterForm, LoginForm
 from flask_login import login_user, logout_user
 
@@ -8,8 +8,8 @@ from flask_login import login_user, logout_user
 @app.route("/")
 @app.route("/home")
 def home_page():
-    users = User.query.all()
-    return render_template("home.html", users=users)
+    films = Film.query.all()
+    return render_template("home.html", films=films)
 
 
 @app.route("/register", methods=["GET", "POST"])
