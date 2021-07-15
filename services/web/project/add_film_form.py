@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import widgets, StringField, TextAreaField, DecimalField, SelectMultipleField, SubmitField, HiddenField
 from wtforms.fields.html5 import DateField
-from wtforms.validators import Length, EqualTo, Email, InputRequired, NumberRange
+from wtforms.validators import Length, InputRequired, NumberRange
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 from project.models import Director, Genre
 
