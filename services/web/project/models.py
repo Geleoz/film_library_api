@@ -29,6 +29,6 @@ class User(db.Model, UserMixin):
     status_id = db.Column(db.Integer, db.ForeignKey('status.status_id'))
     status = relationship("Status", back_populates="users")
 
+
     def get_id(self):
         return self.user_id
-
