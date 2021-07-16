@@ -1,7 +1,7 @@
-from project import app, db
+from project import app, db, admin
 from flask import render_template, request, flash, redirect, url_for, session
 from flask_login import login_user, logout_user
-from project.models import Film, Genre, Director, User
+from project.models import Film, Genre, Director, User, Role
 from project.forms import AddFilm, FilterBy
 from project.auth import RegisterForm, LoginForm
 
@@ -37,7 +37,6 @@ def get_sorted_films(sort_parameter, films=None):
 @app.route("/", methods=["GET", "POST"])
 @app.route("/home", methods=["GET", "POST"])
 def home_page():
-    session.clear()
     form = FilterBy()
     form.genre.choices = [(str(x.id), x.name) for x in Genre.query.all()]
 
@@ -171,7 +170,8 @@ def register_page():
     if form.validate_on_submit():
         new_user = User(username=form.username.data,
                         email=form.email.data,
-                        password=form.password1.data)
+                        password=form.password1.data,
+                        roles=[Role.query.get(1)])
         db.session.add(new_user)
         db.session.commit()
         login_user(new_user)

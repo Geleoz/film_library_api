@@ -1,6 +1,6 @@
 from flask.cli import FlaskGroup
 from project import app, db
-from project.models import User, Director, Genre, Film
+from project.models import User, Director, Genre, Film, Role
 import pandas as pd
 
 
@@ -53,7 +53,13 @@ def seed_db():
                 film.genres.append(Genre.query.filter_by(id=j[2]).first())
         db.session.add(film)
         current_film_id += 1
-
+    db.session.commit()
+    user_role = Role(name="user")
+    admin_role = Role(name="admin")
+    db.session.add(user_role)
+    db.session.add(admin_role)
+    db.session.add(User(username="admin", email="admin@gmail.com",
+                        password="adminpassword", roles=[user_role, admin_role]))
     db.session.commit()
 
 

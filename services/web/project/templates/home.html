@@ -87,7 +87,7 @@
         </div>
     </div>
 <!--Pagination-->
-<div class="container text-right mr-5" style="position: fixed; bottom: 100px; right: 10px">
+<div class="container text-right mr-5" style="position: fixed; bottom: 50px; right: 10px">
     <a href="{%if sort%}{{ url_for('home_page', page=films.prev_num, sort=sort) }}{%else%}{{url_for('home_page', page=films.prev_num)}}{%endif%}"
        class="btn btn-outline-light {% if films.page == 1 %}disabled{% endif %}">
         &laquo;

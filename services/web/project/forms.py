@@ -3,7 +3,7 @@ from wtforms import widgets, StringField, TextAreaField, DecimalField, SelectMul
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Length, InputRequired, NumberRange
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
-from project.models import Director, Genre, Film
+from project.models import Director
 
 
 def choose_directors():
