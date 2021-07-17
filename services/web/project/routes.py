@@ -156,6 +156,7 @@ def add_film_page():
         db.session.add(film)
         db.session.commit()
         flash("Film has been added successfully.", category="success")
+        app.logger.info(f"New film added by user {current_user.username}: {film}(id: {film.id})")
         return redirect(url_for("home_page"))
     if form.errors != {}:
         for err in form.errors.values():
@@ -167,6 +168,9 @@ def add_film_page():
 
 @app.route("/delete_film", methods=["POST"])
 def delete_film_page():
+    app.logger.info(f"Film {Film.query.get(request.args.get('film_id'))}"
+                    f"(id: {request.args.get('film_id')}) "
+                    f"has been deleted by {current_user.username}")
     Film.query.filter_by(id=request.args.get("film_id")).delete()
     db.session.commit()
     flash("Film has been deleted successfully.", category="success")
@@ -183,7 +187,9 @@ def register_page():
                         roles=[Role.query.get(1)])
         db.session.add(new_user)
         db.session.commit()
+        app.logger.info(f"New user registered: {new_user.username}")
         login_user(new_user)
+        app.logger.info(f"User {new_user.username} logged in successfully")
         return redirect(url_for("home_page"))
     if form.errors != {}:
         for err in form.errors.values():
@@ -198,6 +204,7 @@ def login_page():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data:
             login_user(user)
+            app.logger.info(f"User {user.username} logged in successfully")
             return redirect(url_for("home_page"))
         flash("Wrong username or password", category="danger")
     return render_template("auth/login.html", form=form)
@@ -205,5 +212,6 @@ def login_page():
 
 @app.route("/logout")
 def logout_page():
+    app.logger.info(f"User logout: {current_user.username}")
     logout_user()
     return redirect(url_for("home_page"))
