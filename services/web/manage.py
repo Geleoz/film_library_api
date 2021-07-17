@@ -16,35 +16,46 @@ def create_db():
 
 @cli.command("seed_db")
 def seed_db():
-    directors = pd.read_csv("project/data/directors.csv", quotechar='"', skipinitialspace=True, header=None)
-    genres = pd.read_csv("project/data/genres.csv", quotechar='"', skipinitialspace=True, header=None)
-    films = pd.read_csv("project/data/films.csv", quotechar='"', skipinitialspace=True, header=None)
-    film_director = pd.read_csv("project/data/film_director.csv", quotechar='"', skipinitialspace=True, header=None)
-    film_genre = pd.read_csv("project/data/film_genre.csv", quotechar='"', skipinitialspace=True, header=None)
+    directors = pd.read_csv(
+        "project/data/directors.csv", quotechar='"', skipinitialspace=True, header=None
+    )
+    genres = pd.read_csv(
+        "project/data/genres.csv", quotechar='"', skipinitialspace=True, header=None
+    )
+    films = pd.read_csv(
+        "project/data/films.csv", quotechar='"', skipinitialspace=True, header=None
+    )
+    film_director = pd.read_csv(
+        "project/data/film_director.csv",
+        quotechar='"',
+        skipinitialspace=True,
+        header=None,
+    )
+    film_genre = pd.read_csv(
+        "project/data/film_genre.csv", quotechar='"', skipinitialspace=True, header=None
+    )
 
     for i in directors.itertuples():
-        director = Director(**{
-            "first_name": i[1],
-            "last_name": i[2],
-            "birth_date": i[3]
-        })
+        director = Director(
+            **{"first_name": i[1], "last_name": i[2], "birth_date": i[3]}
+        )
         db.session.add(director)
 
     for i in genres.itertuples():
-        genre = Genre(**{
-            "name": i[1]
-        })
+        genre = Genre(**{"name": i[1]})
         db.session.add(genre)
 
     current_film_id = 1
     for i in films.itertuples():
-        film = Film(**{
-            "title": i[1],
-            "release_date": i[2],
-            "description": i[3],
-            "rating": i[4],
-            "poster": i[5]
-        })
+        film = Film(
+            **{
+                "title": i[1],
+                "release_date": i[2],
+                "description": i[3],
+                "rating": i[4],
+                "poster": i[5],
+            }
+        )
         for j in film_director.itertuples():
             if j[1] == current_film_id:
                 film.directors.append(Director.query.filter_by(id=j[2]).first())
@@ -58,8 +69,14 @@ def seed_db():
     admin_role = Role(name="admin")
     db.session.add(user_role)
     db.session.add(admin_role)
-    db.session.add(User(username="admin", email="admin@gmail.com",
-                        password="adminpassword", roles=[user_role, admin_role]))
+    db.session.add(
+        User(
+            username="admin",
+            email="admin@gmail.com",
+            password="adminpassword",
+            roles=[user_role, admin_role],
+        )
+    )
     db.session.commit()
 
 

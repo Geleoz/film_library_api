@@ -8,10 +8,18 @@ from project.auth import RegisterForm, LoginForm
 
 def get_filtered_films():
     if "release_date_from" not in session or not session["release_date_from"]:
-        session["release_date_from"] = Film.query.order_by(Film.release_date).first().release_date
+        session["release_date_from"] = (
+            Film.query.order_by(Film.release_date).first().release_date
+        )
     if "release_date_to" not in session or not session["release_date_to"]:
-        session["release_date_to"] = Film.query.order_by(Film.release_date.desc()).first().release_date
-    films = Film.query.filter(Film.release_date.between(session["release_date_from"], session["release_date_to"]))
+        session["release_date_to"] = (
+            Film.query.order_by(Film.release_date.desc()).first().release_date
+        )
+    films = Film.query.filter(
+        Film.release_date.between(
+            session["release_date_from"], session["release_date_to"]
+        )
+    )
     if "director" in session and session["director"] != "__None":
         films = films.filter(Film.directors.any(id=session["director"]))
     if "genres" in session:
@@ -40,7 +48,7 @@ def home_page():
     form = FilterBy()
     form.genre.choices = [(str(x.id), x.name) for x in Genre.query.all()]
 
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get("page", 1, type=int)
 
     # if sort
     if "sort" in request.args:
@@ -57,7 +65,7 @@ def home_page():
 def search_page():
     # receives requests from base.html or search.html
 
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get("page", 1, type=int)
 
     # if search
     if "query" in request.form:
@@ -65,9 +73,11 @@ def search_page():
         return redirect(url_for("search_page", key=query))
 
     query = request.args.get("key")
-    films = Film.query.filter(Film.title.ilike(query) |
-                              db.cast(Film.release_date, db.String(10)).ilike(query) |
-                              db.cast(Film.rating, db.String(10)).ilike(query))
+    films = Film.query.filter(
+        Film.title.ilike(query)
+        | db.cast(Film.release_date, db.String(10)).ilike(query)
+        | db.cast(Film.rating, db.String(10)).ilike(query)
+    )
 
     # if sort search results
     if "sort" in request.args:
@@ -86,7 +96,7 @@ def filter_page():
 
     form = FilterBy()
     form.genre.choices = [(str(x.id), x.name) for x in Genre.query.all()]
-    page = request.args.get('page', 1, type=int)
+    page = request.args.get("page", 1, type=int)
 
     # if filter
     if form.is_submitted():
@@ -103,7 +113,9 @@ def filter_page():
     if "sort" in request.args:
         sort = request.args.get("sort")
         films = get_sorted_films(sort, films).paginate(page=page, per_page=10)
-        return render_template("filter.html", films=films, form=form, filter=True, sort=sort)
+        return render_template(
+            "filter.html", films=films, form=form, filter=True, sort=sort
+        )
 
     # if just switch page
     films = films.paginate(page=page, per_page=10)
@@ -145,19 +157,25 @@ def add_film_page():
     form = AddFilm()
     form.genre.choices = [(str(x.id), x.name) for x in Genre.query.all()]
     if form.validate_on_submit():
-        film = Film(title=request.form["title"],
-                    release_date=request.form["release_date"],
-                    description=request.form["description"],
-                    rating=request.form["rating"],
-                    poster=request.form["poster"],
-                    user_id=current_user.get_id())
-        film.directors.append(Director.query.filter_by(id=request.form["director"]).first())
+        film = Film(
+            title=request.form["title"],
+            release_date=request.form["release_date"],
+            description=request.form["description"],
+            rating=request.form["rating"],
+            poster=request.form["poster"],
+            user_id=current_user.get_id(),
+        )
+        film.directors.append(
+            Director.query.filter_by(id=request.form["director"]).first()
+        )
         for genre_id in form.genre.data:
             film.genres.append(Genre.query.filter_by(id=genre_id).first())
         db.session.add(film)
         db.session.commit()
         flash("Film has been added successfully.", category="success")
-        app.logger.info(f"New film added by user {current_user.username}: {film}(id: {film.id})")
+        app.logger.info(
+            f"New film added by user {current_user.username}: {film}(id: {film.id})"
+        )
         return redirect(url_for("home_page"))
     if form.errors != {}:
         for err in form.errors.values():
@@ -169,9 +187,11 @@ def add_film_page():
 
 @app.route("/delete_film", methods=["POST"])
 def delete_film_page():
-    app.logger.info(f"Film {Film.query.get(request.args.get('film_id'))}"
-                    f"(id: {request.args.get('film_id')}) "
-                    f"has been deleted by {current_user.username}")
+    app.logger.info(
+        f"Film {Film.query.get(request.args.get('film_id'))}"
+        f"(id: {request.args.get('film_id')}) "
+        f"has been deleted by {current_user.username}"
+    )
     Film.query.filter_by(id=request.args.get("film_id")).delete()
     db.session.commit()
     flash("Film has been deleted successfully.", category="success")
@@ -182,10 +202,12 @@ def delete_film_page():
 def register_page():
     form = RegisterForm()
     if form.validate_on_submit():
-        new_user = User(username=form.username.data,
-                        email=form.email.data,
-                        password=form.password1.data,
-                        roles=[Role.query.get(1)])
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password1.data,
+            roles=[Role.query.get(1)],
+        )
         db.session.add(new_user)
         db.session.commit()
         app.logger.info(f"New user registered: {new_user.username}")
@@ -213,8 +235,11 @@ def login_page():
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    flash("Unauthorized users cannot add films. Please sign in or create new account.", category="danger")
-    return redirect('/login')
+    flash(
+        "Unauthorized users cannot add films. Please sign in or create new account.",
+        category="danger",
+    )
+    return redirect("/login")
 
 
 @app.route("/logout")
