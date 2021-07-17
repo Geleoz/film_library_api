@@ -37,10 +37,13 @@ class User(db.Model, UserMixin):
     def is_admin(self):
         return Role.query.get(2) in self.roles
 
+    def get_id(self):
+        return self.id
+
     
 film_director = db.Table("film_director",
-                         db.Column("film_id", db.Integer, db.ForeignKey("film.id")),
-                         db.Column("director_id", db.Integer, db.ForeignKey("director.id")))
+                         db.Column("film_id", db.Integer, db.ForeignKey("film.id", ondelete="SET NULL")),
+                         db.Column("director_id", db.Integer, db.ForeignKey("director.id", ondelete="SET NULL")))
 
 
 class Director(db.Model):
@@ -56,10 +59,9 @@ class Director(db.Model):
         return self.first_name + " " + self.last_name
 
 
-film_genre = db.Table("film_genre", db.Model.metadata,
-                      db.Column('id', db.Integer, primary_key=True),
-                      db.Column("film_id", db.Integer, db.ForeignKey("film.id")),
-                      db.Column("genre_id", db.Integer, db.ForeignKey("genre.id")))
+film_genre = db.Table("film_genre",
+                      db.Column("film_id", db.Integer, db.ForeignKey("film.id", ondelete="SET NULL")),
+                      db.Column("genre_id", db.Integer, db.ForeignKey("genre.id", ondelete="SET NULL")))
 
 
 class Genre(db.Model):
@@ -67,7 +69,7 @@ class Genre(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False)
-    films = relationship("Film", secondary=film_genre, back_populates="genres")
+    films = relationship("Film", secondary=film_genre, back_populates="genres", cascade="all, delete")
 
 
 class Film(db.Model):
@@ -82,4 +84,4 @@ class Film(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = relationship("User", back_populates="added_films")
     directors = relationship("Director", secondary=film_director, back_populates="films")
-    genres = relationship("Genre", secondary=film_genre, back_populates="films")
+    genres = relationship("Genre", secondary=film_genre, back_populates="films", passive_deletes=True)
