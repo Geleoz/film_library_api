@@ -1,0 +1,16 @@
+    Login page
+    ---
+    parameters:
+      - name: username
+        in: formData
+        type: string
+        required: true
+      - name: password
+        in: formData
+        type: string
+        required: true
+    responses:
+      200:
+        description: Wrong username or password, refresh the page
+      302:
+        description: User logged in successfully

@@ -1,21 +1,34 @@
-from project import db, login_manager, admin
+"""
+Database models
+"""
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
+from project import db, login_manager
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    """
+    Return authorized user by id stored in session
+    :param user_id: int
+    :return: User object
+    """
+    return User.query.get(user_id)
 
 
 roles_users = db.Table(
-    'roles_users',
-    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer(), db.ForeignKey('role.id'))
+    "roles_users",
+    db.Column("user_id", db.Integer(), db.ForeignKey("user.id")),
+    db.Column("role_id", db.Integer(), db.ForeignKey("role.id")),
 )
 
 
 class Role(db.Model):
+    """
+    User roles table
+    """
+    __tablename__ = "role"
+
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
 
@@ -24,6 +37,9 @@ class Role(db.Model):
 
 
 class User(db.Model, UserMixin):
+    """
+    Users table
+    """
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -31,25 +47,34 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(64), nullable=False)
     added_films = relationship("Film", back_populates="user")
-    roles = db.relationship('Role', secondary=roles_users,
-                            backref=db.backref('users', lazy='dynamic'))
+    roles = db.relationship(
+        "Role", secondary=roles_users, backref=db.backref("users", lazy="dynamic")
+    )
 
     def __repr__(self):
         return f"{self.username} {self.roles}"
 
     def is_admin(self):
+        """
+        Checks if user is admin
+        :return: bool
+        """
         return Role.query.get(2) in self.roles
 
-    def get_id(self):
-        return self.id
 
-    
-film_director = db.Table("film_director",
-                         db.Column("film_id", db.Integer, db.ForeignKey("film.id", ondelete="SET NULL")),
-                         db.Column("director_id", db.Integer, db.ForeignKey("director.id", ondelete="SET NULL")))
+film_director = db.Table(
+    "film_director",
+    db.Column("film_id", db.Integer, db.ForeignKey("film.id", ondelete="SET NULL")),
+    db.Column(
+        "director_id", db.Integer, db.ForeignKey("director.id", ondelete="SET NULL")
+    ),
+)
 
 
 class Director(db.Model):
+    """
+    Directors table
+    """
     __tablename__ = "director"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -62,23 +87,33 @@ class Director(db.Model):
         return self.first_name + " " + self.last_name
 
 
-film_genre = db.Table("film_genre",
-                      db.Column("film_id", db.Integer, db.ForeignKey("film.id", ondelete="SET NULL")),
-                      db.Column("genre_id", db.Integer, db.ForeignKey("genre.id", ondelete="SET NULL")))
+film_genre = db.Table(
+    "film_genre",
+    db.Column("film_id", db.Integer, db.ForeignKey("film.id", ondelete="SET NULL")),
+    db.Column("genre_id", db.Integer, db.ForeignKey("genre.id", ondelete="SET NULL")),
+)
 
 
 class Genre(db.Model):
+    """
+    Genres table
+    """
     __tablename__ = "genre"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), nullable=False)
-    films = relationship("Film", secondary=film_genre, back_populates="genres", cascade="all, delete")
+    films = relationship(
+        "Film", secondary=film_genre, back_populates="genres", cascade="all, delete"
+    )
 
     def __repr__(self):
         return self.name
 
 
 class Film(db.Model):
+    """
+    Films table
+    """
     __tablename__ = "film"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -89,8 +124,12 @@ class Film(db.Model):
     poster = db.Column(db.Text)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     user = relationship("User", back_populates="added_films")
-    directors = relationship("Director", secondary=film_director, back_populates="films")
-    genres = relationship("Genre", secondary=film_genre, back_populates="films", passive_deletes=True)
+    directors = relationship(
+        "Director", secondary=film_director, back_populates="films"
+    )
+    genres = relationship(
+        "Genre", secondary=film_genre, back_populates="films", passive_deletes=True
+    )
 
     def __repr__(self):
         return self.title

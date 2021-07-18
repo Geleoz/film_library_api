@@ -1,0 +1,19 @@
+    Sort page
+    ---
+    parameters:
+      - name: sort
+        in: formData
+        type: string
+        description: Parameter for sorting films
+        example: sort_by_release_date_asc
+      - name: key
+        in: formData
+        type: string
+        description: Search key
+      - name: filter
+        in: formData
+        type: bool
+        description: True when sorting filtered films
+    responses:
+      302:
+        description: Films sorted successfully
