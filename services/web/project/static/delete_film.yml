@@ -1,0 +1,10 @@
+    Delete film page
+    ---
+    parameters:
+      - name: film_id
+        in: formData
+        type: integer
+        required: true
+    responses:
+      302:
+        description: Film has been deleted successfully

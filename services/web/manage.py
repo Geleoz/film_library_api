@@ -1,7 +1,10 @@
+"""
+Module for creating database and filling it with initial values
+"""
 from flask.cli import FlaskGroup
+import pandas as pd
 from project import app, db
 from project.models import User, Director, Genre, Film, Role
-import pandas as pd
 
 
 cli = FlaskGroup(app)
@@ -9,6 +12,9 @@ cli = FlaskGroup(app)
 
 @cli.command("create_db")
 def create_db():
+    """
+    Creates db
+    """
     db.drop_all()
     db.create_all()
     db.session.commit()
@@ -16,6 +22,9 @@ def create_db():
 
 @cli.command("seed_db")
 def seed_db():
+    """
+    Fills in db with initial values
+    """
     directors = pd.read_csv(
         "project/data/directors.csv", quotechar='"', skipinitialspace=True, header=None
     )

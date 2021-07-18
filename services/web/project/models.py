@@ -1,11 +1,19 @@
-from project import db, login_manager, admin
+"""
+Database models
+"""
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
+from project import db, login_manager
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    """
+    Return authorized user by id stored in session
+    :param user_id: int
+    :return: User object
+    """
+    return User.query.get(user_id)
 
 
 roles_users = db.Table(
@@ -16,6 +24,11 @@ roles_users = db.Table(
 
 
 class Role(db.Model):
+    """
+    User roles table
+    """
+    __tablename__ = "role"
+
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
 
@@ -24,6 +37,9 @@ class Role(db.Model):
 
 
 class User(db.Model, UserMixin):
+    """
+    Users table
+    """
     __tablename__ = "user"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -39,10 +55,11 @@ class User(db.Model, UserMixin):
         return f"{self.username} {self.roles}"
 
     def is_admin(self):
+        """
+        Checks if user is admin
+        :return: bool
+        """
         return Role.query.get(2) in self.roles
-
-    def get_id(self):
-        return self.id
 
 
 film_director = db.Table(
@@ -55,6 +72,9 @@ film_director = db.Table(
 
 
 class Director(db.Model):
+    """
+    Directors table
+    """
     __tablename__ = "director"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -75,6 +95,9 @@ film_genre = db.Table(
 
 
 class Genre(db.Model):
+    """
+    Genres table
+    """
     __tablename__ = "genre"
 
     id = db.Column(db.Integer, primary_key=True)
@@ -88,6 +111,9 @@ class Genre(db.Model):
 
 
 class Film(db.Model):
+    """
+    Films table
+    """
     __tablename__ = "film"
 
     id = db.Column(db.Integer, primary_key=True)

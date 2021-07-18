@@ -1,0 +1,10 @@
+    Search page
+    ---
+    parameters:
+      - name: key
+        in: formData
+        type: string
+        description: Search key
+    responses:
+      302:
+        description: Films searched successfully

@@ -1,0 +1,25 @@
+    Filter page
+    ---
+    parameters:
+      - name: release_date_from
+        in: formData
+        type: date
+        description: Start date for filter
+      - name: release_date_to
+        in: formData
+        type: date
+        description: End date for filter
+      - name: director
+        in: formData
+        type: integer
+        description: Director id for filter
+      - name: genres
+        in: formData
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Array of genre ids for filter
+    responses:
+      200:
+        description: Films filtered successfully

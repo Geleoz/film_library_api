@@ -1,0 +1,5 @@
+    Login page
+    ---
+    responses:
+      200:
+        description: Login page displayed successfully

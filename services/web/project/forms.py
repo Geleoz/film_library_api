@@ -1,3 +1,6 @@
+"""
+Module contains form that displayed on the app pages
+"""
 from flask_wtf import FlaskForm
 from wtforms import (
     widgets,
@@ -6,7 +9,6 @@ from wtforms import (
     DecimalField,
     SelectMultipleField,
     SubmitField,
-    HiddenField,
 )
 from wtforms.fields.html5 import DateField
 from wtforms.validators import Length, InputRequired, NumberRange
@@ -15,15 +17,25 @@ from project.models import Director
 
 
 def choose_directors():
+    """
+    Query all directors from db
+    :return: list
+    """
     return Director.query.all()
 
 
 class MultiCheckboxField(SelectMultipleField):
+    """
+    Checkbox with multiple select options
+    """
     widget = widgets.ListWidget(prefix_label=False)
     option_widget = widgets.CheckboxInput()
 
 
 class AddFilm(FlaskForm):
+    """
+    Form for adding films
+    """
     title = StringField(
         label="Film title",
         validators=[
@@ -50,7 +62,6 @@ class AddFilm(FlaskForm):
     director = QuerySelectField(
         label="Director", validators=[InputRequired()], query_factory=choose_directors
     )
-    director_id = HiddenField()
     genre = MultiCheckboxField(
         label="Genres", validators=[InputRequired(message="Genres not specified.")]
     )
@@ -58,6 +69,9 @@ class AddFilm(FlaskForm):
 
 
 class FilterBy(FlaskForm):
+    """
+    Form for filtering films
+    """
     release_date_from = DateField(label="Date From")
     release_date_to = DateField(label="Date To")
     director = QuerySelectField(

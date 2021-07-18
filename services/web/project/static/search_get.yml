@@ -1,0 +1,33 @@
+    Search page
+    ---
+    parameters:
+      - name: page
+        in: query
+        type: integer
+        required: true
+        description: Used for pagination
+        default: 1
+      - name: sort
+        in: query
+        type: string
+        description: Parameter for sorting films
+        example: sort_by_release_date_asc
+      - name: key
+        in: query
+        type: string
+        description: Search key
+    responses:
+      200:
+        schema:
+          type: array
+          items:
+            properties:
+              film title:
+                type: string
+                example: Inception
+              film release date:
+                type: date
+                example: 2010-07-22
+              film rating:
+                type: float
+                example: 8.8
