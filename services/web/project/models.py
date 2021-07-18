@@ -19,7 +19,7 @@ class Role(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(80), unique=True)
 
-    def __str__(self):
+    def __repr__(self):
         return self.name
 
 
@@ -33,6 +33,9 @@ class User(db.Model, UserMixin):
     added_films = relationship("Film", back_populates="user")
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
+
+    def __repr__(self):
+        return f"{self.username} {self.roles}"
 
     def is_admin(self):
         return Role.query.get(2) in self.roles
@@ -71,6 +74,9 @@ class Genre(db.Model):
     name = db.Column(db.String(32), nullable=False)
     films = relationship("Film", secondary=film_genre, back_populates="genres", cascade="all, delete")
 
+    def __repr__(self):
+        return self.name
+
 
 class Film(db.Model):
     __tablename__ = "film"
@@ -85,3 +91,6 @@ class Film(db.Model):
     user = relationship("User", back_populates="added_films")
     directors = relationship("Director", secondary=film_director, back_populates="films")
     genres = relationship("Genre", secondary=film_genre, back_populates="films", passive_deletes=True)
+
+    def __repr__(self):
+        return self.title
