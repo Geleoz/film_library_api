@@ -1,6 +1,6 @@
-from project import app, db, admin
+from project import app, db, admin, login_manager
 from flask import render_template, request, flash, redirect, url_for, session
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from project.models import Film, Genre, Director, User, Role
 from project.forms import AddFilm, FilterBy
 from project.auth import RegisterForm, LoginForm
@@ -140,6 +140,7 @@ def film_page(film_id, film_title):
 
 
 @app.route("/add_film", methods=["GET", "POST"])
+@login_required
 def add_film_page():
     form = AddFilm()
     form.genre.choices = [(str(x.id), x.name) for x in Genre.query.all()]
@@ -201,6 +202,12 @@ def login_page():
             return redirect(url_for("home_page"))
         flash("Wrong username or password", category="danger")
     return render_template("auth/login.html", form=form)
+
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    flash("Unauthorized users cannot add films. Please sign in or create new account.", category="danger")
+    return redirect('/login')
 
 
 @app.route("/logout")
