@@ -1,0 +1,40 @@
+    Film page
+    ---
+    parameters:
+      - name: film_id
+        in: path
+        type: integer
+        required: true
+      - name: film_title
+        in: path
+        type: string
+        required: true
+    responses:
+      200:
+        description: Film info displayed successfully
+        schema:
+          properties:
+            film poster:
+              type: string
+              example: https://images-na.ssl-images-amazon.com/images/I/912AErFSBHL._SL1500_.jpg
+            film title:
+              type: string
+              example: Inception
+            film release date:
+              type: date
+              example: 2010-07-22
+            film rating:
+              type: float
+              example: 8.8
+            film director:
+              type: string
+              example: Christopher Nolan
+            film genres:
+              schema:
+                type: array
+                items:
+                  type: string
+              example: ["Action", "Adventure", "Sci-Fi"]
+            film description:
+              type: string
+              example: Dom Cobb is a skilled thief, the absolute best in the dangerous art of extraction, stealing valuable secrets from deep within the subconscious during the dream state, when the mind is at its most vulnerable....

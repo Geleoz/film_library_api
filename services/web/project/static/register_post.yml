@@ -1,0 +1,26 @@
+    Register page
+    ---
+    parameters:
+      - name: username
+        in: formData
+        type: string
+        required: true
+      - name: email
+        in: formData
+        type: string
+        required: true
+      - name: password1
+        in: formData
+        type: string
+        required: true
+        description: First password entry
+      - name: password2
+        in: formData
+        type: string
+        required: true
+        description: Second password entry
+    responses:
+      200:
+        description: Impossible to register a user with such data, refresh the page
+      302:
+        description: User registered successfully
