@@ -30,9 +30,13 @@
         </p>
         <p>
             <b>Directors</b>
-            {% for director in film.directors %}
-                {{ director }}
-            {% endfor %}
+            {% if not film.directors %}
+                <i>unknown</i>
+            {% else %}
+                {% for director in film.directors %}
+                    {{ director }}
+                {% endfor %}
+            {% endif %}
         </p>
         <p>
             <b>Genres</b>
