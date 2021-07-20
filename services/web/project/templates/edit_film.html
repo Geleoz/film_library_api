@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}
+    Edit film
+{% endblock %}
+
+{% block content %}
+    <div class="container mb-5 ml-5 mt-5" style="width: 700px">
+        <form method="POST" style="color:white">
+            {{ form.hidden_tag() }}
+            <br>
+            <h1>Edit film</h1>
+            <br>
+            {{ form.title.label() }}
+            {{ form.title(class="form-control") }}
+            <br>
+            {{ form.release_date.label() }}
+            {{ form.release_date(class="form-control") }}
+            <br>
+            {{ form.description.label() }}
+            {{ form.description(class="form-control") }}
+            <br>
+            {{ form.rating.label() }}
+            {{ form.rating(class="form-control") }}
+            <br>
+            {{ form.poster.label() }}
+            {{ form.poster(class="form-control") }}
+            <br>
+            {{ form.director.label() }}
+            {{ form.director(class="form-control") }}
+            <br>
+                {{ form.genre.label() }}
+                {% for genre in form.genre %}
+                    <div class="form-check">
+                        {{ genre(class="form-check-input") }}
+                        {{ genre.label(class="form-check-label") }}
+                    </div>
+                {% endfor %}
+            <br>
+            {{ form.submit(class="btn, btn-lg btn-block btn-primary") }}
+        </form>
+    </div>
+{% endblock %}

@@ -237,6 +237,59 @@ def add_film_page():
     return render_template("add_film.html", form=form)
 
 
+@app.route("/edit_film", methods=["GET", "POST"])
+@login_required
+@swag_from("static/edit_film_get.yml", methods=["GET"])
+@swag_from("static/edit_film_post.yml", methods=["POST"])
+def edit_film_page():
+    """
+    Edit film page
+    :return:
+        - redirect to another route
+        - html template
+    """
+    film = Film.query.get(request.args.get("film_id"))
+    if not film or not (current_user.is_admin() or film.user_id == current_user.id):
+        return redirect(url_for("home_page"))
+
+    form = AddFilm()
+    form.genre.choices = [(str(x.id), x.name) for x in Genre.query.all()]
+    if form.validate_on_submit():
+        film.title = request.form["title"]
+        film.release_date = request.form["release_date"]
+        film.description = request.form["description"]
+        film.rating = request.form["rating"]
+        film.poster = request.form["poster"]
+        film.directors = []
+        film.directors.append(Director.query.get(request.form["director"]))
+        film.genres = []
+        for genre_id in form.genre.data:
+            film.genres.append(Genre.query.get(genre_id))
+        db.session.commit()
+        flash("Film has been edited successfully.", category="success")
+        app.logger.info(
+            f"Film {film}(id: {film.id}) edited by user {current_user.username}"
+        )
+        return redirect(url_for("film_page", film_id=film.id, film_title=film.title))
+
+    if form.errors != {}:
+        for err in form.errors.values():
+            flash(f"Error: {err}.", category="danger")
+
+    form.title.default = film.title
+    form.release_date.default = film.release_date
+    form.description.default = film.description
+    form.rating.default = film.rating
+    form.poster.default = film.poster
+    form.director.default = film.directors[0]
+    default_genres = []
+    for genre in film.genres:
+        default_genres.append(genre.id)
+    form.genre.default = default_genres
+    form.process()
+    return render_template("edit_film.html", form=form)
+
+
 @app.route("/delete_film", methods=["POST"])
 @login_required
 @swag_from("static/delete_film.yml")
@@ -245,7 +298,8 @@ def delete_film_page():
     Delete film page
     :return: redirect to another route
     """
-    if not current_user.is_admin() and Film.query.get(request.args.get("film_id")).user_id != current_user.id:
+    film = Film.query.get(request.args.get("film_id"))
+    if not film or not (current_user.is_admin() or film.user_id == current_user.id):
         return redirect(url_for("home_page"))
     app.logger.info(
         f"Film {Film.query.get(request.args.get('film_id'))}"

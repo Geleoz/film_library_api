@@ -25,6 +25,26 @@ def seed_db():
     """
     Fills in db with initial values
     """
+    user_role = Role(name="user")
+    admin_role = Role(name="admin")
+    db.session.add(user_role)
+    db.session.add(admin_role)
+    db.session.add(
+        User(
+            username="admin",
+            email="admin@gmail.com",
+            password="adminpassword",
+            roles=[user_role, admin_role],
+        )
+    )
+    db.session.add(
+        User(
+            username="username",
+            email="email@gmail.com",
+            password="password",
+            roles=[user_role],
+        )
+    )
     directors = pd.read_csv(
         "project/data/directors.csv", quotechar='"', skipinitialspace=True, header=None
     )
@@ -63,6 +83,7 @@ def seed_db():
                 "description": i[3],
                 "rating": i[4],
                 "poster": i[5],
+                "user_id": 1
             }
         )
         for j in film_director.itertuples():
@@ -74,26 +95,6 @@ def seed_db():
         db.session.add(film)
         current_film_id += 1
     db.session.commit()
-    user_role = Role(name="user")
-    admin_role = Role(name="admin")
-    db.session.add(user_role)
-    db.session.add(admin_role)
-    db.session.add(
-        User(
-            username="admin",
-            email="admin@gmail.com",
-            password="adminpassword",
-            roles=[user_role, admin_role],
-        )
-    )
-    db.session.add(
-        User(
-            username="username",
-            email="email@gmail.com",
-            password="password",
-            roles=[user_role],
-        )
-    )
     db.session.commit()
 
 

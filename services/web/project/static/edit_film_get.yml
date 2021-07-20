@@ -1,0 +1,10 @@
+    Edit film page
+    ---
+    parameters:
+      - name: form
+        in: query
+        type: FlaskForm
+        description: Form with rows for film attributes
+    responses:
+      200:
+        description: Edit film page displayed successfully
