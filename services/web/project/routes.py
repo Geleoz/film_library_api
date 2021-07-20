@@ -238,12 +238,15 @@ def add_film_page():
 
 
 @app.route("/delete_film", methods=["POST"])
+@login_required
 @swag_from("static/delete_film.yml")
 def delete_film_page():
     """
     Delete film page
     :return: redirect to another route
     """
+    if not current_user.is_admin() and Film.query.get(request.args.get("film_id")).user_id != current_user.id:
+        return redirect(url_for("home_page"))
     app.logger.info(
         f"Film {Film.query.get(request.args.get('film_id'))}"
         f"(id: {request.args.get('film_id')}) "
