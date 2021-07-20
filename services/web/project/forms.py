@@ -49,7 +49,7 @@ class AddFilm(FlaskForm):
     )
     description = TextAreaField(
         label="Description",
-        validators=[Length(max=2048, message="Description is too long.")],
+        validators=[Length(max=4096, message="Description is too long.")],
     )
     rating = DecimalField(
         label="Rating",
@@ -65,7 +65,7 @@ class AddFilm(FlaskForm):
     genre = MultiCheckboxField(
         label="Genres", validators=[InputRequired(message="Genres not specified.")]
     )
-    submit = SubmitField(label="Add film")
+    submit = SubmitField(label="Confirm")
 
 
 class FilterBy(FlaskForm):
