@@ -1,0 +1,42 @@
+    Edit film page
+    ---
+    parameters:
+      - name: title
+        in: formData
+        type: string
+        required: true
+        description: Film title
+      - name: release_date
+        in: formData
+        type: date
+        required: true
+        description: Film release date
+      - name: description
+        in: formData
+        type: string
+        description: Film description
+      - name: rating
+        in: formData
+        type: float
+        required: true
+        description: Film rating
+      - name: poster
+        in: formData
+        type: string
+        description: Film poster url
+      - name: director
+        in: formData
+        type: int
+        required: true
+        description: Film director id
+      - name: genres
+        in: formData
+        required: true
+        schema:
+          type: array
+          items:
+            type: integer
+        description: Array of film genre ids
+    responses:
+      302:
+        description: Film has been edited successfully

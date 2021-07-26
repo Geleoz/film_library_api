@@ -1,0 +1,5 @@
+    Logout page
+    ---
+    responses:
+      302:
+        description: User logged out successfully

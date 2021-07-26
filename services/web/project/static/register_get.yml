@@ -1,0 +1,5 @@
+    Register page
+    ---
+    responses:
+      200:
+        description: Register page displayed successfully

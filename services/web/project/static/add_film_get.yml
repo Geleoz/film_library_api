@@ -1,0 +1,20 @@
+    Add film page
+    ---
+    parameters:
+      - name: directors
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: All directors from database
+      - name: genres
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: All genres from database
+    responses:
+      200:
+        description: Add film page displayed successfully
